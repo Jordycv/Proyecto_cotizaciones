@@ -1,0 +1,109 @@
+CREATE TABLE Proveedor(Id serial primary key, 
+					   RazonSocial varchar(150), 
+					   RUC varchar(11),  
+					   Direccion varchar(200), 
+					   Telefono varchar(50),
+					   Observacion varchar(150),
+					   Estado INTEGER,
+					   UsuCrea int,
+					   FechaCrea date,
+					   UsuMod int,
+					   FechaMod date);
+
+create table UnidadMedida(Id serial primary key,
+						 Descripcion varchar(50),
+						 Abreviatura varchar(10));
+
+create table Producto(Id serial primary key,
+					 Descripcion varchar(150),
+					 IdUnidadMedida int references UnidadMedida(Id));
+					 
+create table Area(Id serial primary key,
+				 descripcion varchar(150));
+				 
+CREATE TABLE Persona (
+    Id serial PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    Apellidos VARCHAR(255),
+    Direccion VARCHAR(255),
+    Email VARCHAR(255),
+    Telefono VARCHAR(255),
+	AreaId int references Area(Id),
+    Estado INTEGER, 
+    FechaCrea DATE,
+    FechaMod DATE
+);
+
+CREATE TABLE Usuario (
+    Id serial PRIMARY KEY,
+    Usuario VARCHAR(255) NOT NULL,
+    Password TEXT,
+    Estado INTEGER, 
+    FechaCrea DATE,
+    FechaMod DATE,
+    PersonsaId INT REFERENCES Personsa(Id)
+);
+
+create table Estado(Id serial primary key,
+				   Descripcion varchar(10));
+insert into Estado(Descripcion) values('EMITIDO'),('APROBADO'),('OBSERVADO'),('ANULADO'),('ATENDIDO');
+
+create table Requerimiento(Id serial primary key,
+						  FechaEmision date, 
+						  UsuEmision int references Usuario(Id),
+						  FechaAprobacion date,
+						  UsuAprobacioon int references Usuario(Id),
+						  FechaObservado date,
+						  UsuObservado int references Usuario(Id),
+						  DescripcionObservacion varchar(200),
+						  FechaAnulado date,
+						  FechaVencimiento date,
+						  UsuAnulado int references Usuario(Id),
+						  Estado int references Estado(Id));
+						  
+create table RequerimientoDetalle(Id serial primary key,
+								 RequerimientoId int references Requerimiento(Id),
+								 ProductoId int references Producto(Id),
+								 Cantidad integer);
+								 --drop table Requerimiento
+create table RespuestaRequerimiento(Id serial primary key,
+								   IdRequerimiento int references Requerimiento(Id),
+								   ProveedorId int references Proveedor(Id),
+								   FechaRespuesta date,
+								   Total decimal(15,2),
+								   Observaciones varchar(150));
+								   
+create table RespuestaRequerimientoDetalle(Id serial primary key,
+										  RespuestaRequerimientoId int references RespuestaRequerimiento(Id),
+										  ProductoId int references Producto(Id),
+								 		  Cantidad integer,
+										  Precio decimal(15,2));
+				
+create table OrdenCompra(Id serial primary key,
+								   IdRespuestaRequerimiento int references RespuestaRequerimiento(Id),
+								   FechaEmision date,
+						 			Estado int,
+								   Observaciones varchar(150));
+								   
+create table OrdenCompraDetalle(Id serial primary key,
+										  OrdenCompraId int references OrdenCompra(Id),
+										  ProductoId int references Producto(Id),
+								 		  Cantidad integer,
+										  Precio decimal(15,2));
+										  
+create table Pecosa(Id serial primary key,
+								   IdArea int references Area(Id),
+									FechaEmision date,
+								   PersonaId int references Persona(Id),
+								Estado int,
+								   Observaciones varchar(150));
+								   
+create table PecosaDetalle(Id serial primary key,
+										  PecosaId int references Pecosa(Id),
+										  ProductoId int references Producto(Id),
+								 		  Cantidad integer,
+										  Precio decimal(15,2));
+										  
+create table Stock(productoId int,
+				  Descripcion varchar(200),
+				  Stock integer)
