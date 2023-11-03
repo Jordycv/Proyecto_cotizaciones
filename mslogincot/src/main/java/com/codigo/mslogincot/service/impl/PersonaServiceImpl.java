@@ -1,60 +1,68 @@
 package com.codigo.mslogincot.service.impl;
 
+import com.codigo.mslogincot.constantes.Constantes;
 import com.codigo.mslogincot.dao.PersonaDAO;
 import com.codigo.mslogincot.entity.Persona;
 import com.codigo.mslogincot.service.PersonaService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
+@Service
 public class PersonaServiceImpl implements PersonaService {
 
     @Autowired
     private PersonaDAO personaDAO;
 
-    @Override
-    public ResponseEntity<String> registrarPersona(Map<String, String> requestMap) {
-        log.info("Registro Interno de una Persona : " + requestMap);
-        try {
-            if(validateRegistroPersona(requestMap)){
-                personaDAO.save(getPersonasMap(requestMap));
-                return LoginUtils.getResponseEntity("Usuario Registrado con éxito", HttpStatus.CREATED);
 
-            }else {
-                return LoginUtils.getResponseEntity(Constantes.DATA_INVALIDA, HttpStatus.BAD_REQUEST);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return LoginUtils.getResponseEntity(Constantes.ALGO_SALIO_MAL,HttpStatus.INTERNAL_SERVER_ERROR);
+    @Override
+    public Persona registrarPersona(Persona persona) {
+        return personaDAO.save(persona);
     }
 
     @Override
     public List<Persona> obtenerAllPersonas() {
-        return null;
-    }
-
-    @Override
-    public Persona crearPersona(Persona persona) {
-        return null;
+        return personaDAO.findAll();
     }
 
     @Override
     public Optional<Persona> getPersona(Integer id) {
-        return Optional.empty();
+        return personaDAO.findById(id);
     }
 
     @Override
     public Optional<Persona> updatePersona(Integer id, Persona persona) {
+        if (personaDAO.existsById(persona.getId())) {
+            Persona personaExistente=getPersona(id).get();
+            personaExistente.setNombre(persona.getNombre());
+            personaExistente.setApellidos(persona.getApellidos());
+            personaExistente.setDireccion(persona.getDireccion());
+            personaExistente.setEmail(persona.getEmail());
+            personaExistente.setAreaId(persona.getAreaId());
+            personaExistente.setEstado(persona.getEstado());
+            personaExistente.setFechaMod(new Date());
+            personaExistente.setTelefono(persona.getTelefono());
+
+            return Optional.of(personaDAO.save(personaExistente));
+        }
         return Optional.empty();
     }
 
     @Override
-    public Persona deletePersona(Integer id) {
-        return null;
+    public Optional<Persona>  deletePersona(Integer id) {
+        if (personaDAO.existsById(getPersona(id).get().getId())) {
+            Persona personaExistente = getPersona(id).get();
+            personaExistente.setEstado(Constantes.INACTIVO);
+            personaExistente.setFechaMod(new Date());
+
+            return Optional.of(personaDAO.save(personaExistente));
+        }
+        return Optional.empty();
     }
 }

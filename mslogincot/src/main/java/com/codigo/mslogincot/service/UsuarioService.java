@@ -13,6 +13,6 @@ public interface UsuarioService {
     List<Usuario> obtenerAllUsuarios();
     Optional<Usuario> obtenerUsuario(Integer id);
     Optional<Usuario> updateUsuario(Integer id, Usuario usuario);
-    Usuario deleteUsuario(Integer id);
+    Optional<Usuario>  deleteUsuario(Integer id);
 
 }

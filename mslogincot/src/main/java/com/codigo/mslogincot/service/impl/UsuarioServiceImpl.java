@@ -40,43 +40,43 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         try {
 
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("usuario"),requestMap.get("contrasena")));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("usuario"), requestMap.get("contrasena")));
 
-            if(authentication.isAuthenticated()){
-                if(customerDetailsService.getUserDetail().getEstado() == 1 ){
+            if (authentication.isAuthenticated()) {
+                if (customerDetailsService.getUserDetail().getEstado() == 1) {
                     return new ResponseEntity<String>(
                             "{\"token \":\"" + jwtUtil.generateToken(customerDetailsService.getUserDetail().getUsuario(),
-                                    customerDetailsService.getUserDetail().getRol()) +"\"}",
+                                    customerDetailsService.getUserDetail().getRol()) + "\"}",
                             HttpStatus.OK);
                 }
-            }else{
-                return new ResponseEntity<String>("{\"mensaje\": " + "Espera la Aprobación del administrador"+"\"}",HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<String>("{\"mensaje\": " + "Espera la Aprobación del administrador" + "\"}", HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("{}", e);
         }
-        return new ResponseEntity<String>("{\"mensaje\": " + "Credenciales Incorrectas"+"\"}",HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<String>("{\"mensaje\": " + "Credenciales Incorrectas" + "\"}", HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseEntity<String> registrarUsuario(Map<String, String> requestMap) {
         log.info("Registro Interno de un Usuario : " + requestMap);
         try {
-            if(validatePrevioRegistro(requestMap)){
+            if (validatePrevioRegistro(requestMap)) {
                 Usuario usuario = usuarioDAO.findByUsuario(requestMap.get("usuario"));
-                if(Objects.isNull(usuario)){
+                if (Objects.isNull(usuario)) {
                     usuarioDAO.save(getUsuariosMap(requestMap));
                     return LoginUtils.getResponseEntity("Usuario Registrado con éxito", HttpStatus.CREATED);
-                }else{
+                } else {
                     return LoginUtils.getResponseEntity("Usuario Ya existe", HttpStatus.BAD_REQUEST);
                 }
-            }else {
+            } else {
                 return LoginUtils.getResponseEntity(Constantes.DATA_INVALIDA, HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return LoginUtils.getResponseEntity(Constantes.ALGO_SALIO_MAL,HttpStatus.INTERNAL_SERVER_ERROR);
+        return LoginUtils.getResponseEntity(Constantes.ALGO_SALIO_MAL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
@@ -93,7 +93,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Optional<Usuario> updateUsuario(Integer id, Usuario usuario) {
         if (usuarioDAO.existsById(usuario.getId())) {
-            Usuario usuarioExistente=obtenerUsuario(id).get();
+            Usuario usuarioExistente = obtenerUsuario(id).get();
             usuarioExistente.setUsuario(usuario.getUsuario());
             usuarioExistente.setEstado(usuario.getEstado());
             usuarioExistente.setPassword(usuario.getPassword());
@@ -107,26 +107,33 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario deleteUsuario(Integer id) {
-        return null;
-    }
+    public Optional<Usuario> deleteUsuario(Integer id) {
+        if (usuarioDAO.existsById(obtenerUsuario(id).get().getId())) {
+            Usuario usuarioExistente = obtenerUsuario(id).get();
+            usuarioExistente.setEstado(Constantes.INACTIVO);
+            usuarioExistente.setFechaMod(new Date());
 
-    private Boolean validatePrevioRegistro(Map<String, String> requestMap){
-        if(requestMap.containsKey("usuario")
-                && requestMap.containsKey("password")
-                && requestMap.containsKey("persona_id")){
-            return true;
+            return Optional.of(usuarioDAO.save(usuarioExistente));
         }
-        return false;
+        return Optional.empty();
     }
-    private Usuario getUsuariosMap(Map<String, String> requestMap){
-        Usuario usuario = new Usuario();
-        usuario.setUsuario(requestMap.get("usuario"));
-        usuario.setPassword(requestMap.get("password"));
-        usuario.setEstado(Constantes.ACTIVO);
-        usuario.setPersonaId(Integer.parseInt(requestMap.get("persona_id")));
-        usuario.setFechaCrea(new Date());
-        return usuario;
+        private Boolean validatePrevioRegistro (Map < String, String > requestMap){
+            if (requestMap.containsKey("usuario")
+                    && requestMap.containsKey("password")
+                    && requestMap.containsKey("persona_id")) {
+                return true;
+            }
+            return false;
+        }
+        private Usuario getUsuariosMap (Map < String, String > requestMap){
+            Usuario usuario = new Usuario();
+            usuario.setUsuario(requestMap.get("usuario"));
+            usuario.setPassword(requestMap.get("password"));
+            usuario.setEstado(Constantes.ACTIVO);
+            usuario.setPersonaId(Integer.parseInt(requestMap.get("persona_id")));
+            usuario.setFechaCrea(new Date());
+            return usuario;
 
-    }
+        }
+
 }

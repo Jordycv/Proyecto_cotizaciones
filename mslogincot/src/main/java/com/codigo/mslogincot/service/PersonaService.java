@@ -8,13 +8,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface PersonaService {
-    ResponseEntity<String> registrarPersona(Map<String,String> requestMap);
+    Persona registrarPersona(Persona persona);
     List<Persona> obtenerAllPersonas();
-    Persona crearPersona(Persona persona);
-
     Optional<Persona> getPersona(Integer id);
 
     Optional<Persona> updatePersona(Integer id, Persona persona);
-    Persona deletePersona(Integer id);
+    Optional<Persona> deletePersona(Integer id);
 
 }
