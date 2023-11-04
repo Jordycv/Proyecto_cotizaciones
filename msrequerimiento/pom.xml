@@ -11,8 +11,8 @@
 	<groupId>com.codigo</groupId>
 	<artifactId>msrequerimiento</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms-productos</name>
-	<description>ms-productos</description>
+	<name>msrequerimiento</name>
+	<description>msrequerimiento</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

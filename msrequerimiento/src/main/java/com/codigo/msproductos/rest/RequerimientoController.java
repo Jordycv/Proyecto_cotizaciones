@@ -34,9 +34,9 @@ public class RequerimientoController {
 
 
     @PostMapping("/registrar/requerimiento")
-    public ResponseEntity<?> guardarRequerimiento(@RequestBody EmisionDto req) {
+    public ResponseEntity<?> guardarRequerimiento(@RequestBody EmisionDto req, HttpServletRequest header) {
         try {
-            Requerimiento requerimiento = requerimientoService.emision(req);
+            Requerimiento requerimiento = requerimientoService.emision(req, header);
             if (!isNull(requerimiento)) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(requerimiento);
             }
@@ -47,9 +47,9 @@ public class RequerimientoController {
     }
 
     @PutMapping("/registrar/aprobacion")
-    public ResponseEntity<?> guardarAprobacion(@RequestBody RequestDto req) {
+    public ResponseEntity<?> guardarAprobacion(@RequestBody RequestDto req, HttpServletRequest header) {
         try {
-            Requerimiento requerimiento = requerimientoService.aprobacion(req);
+            Requerimiento requerimiento = requerimientoService.aprobacion(req, header);
             if (!isNull(requerimiento)) {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(requerimiento);
             }
@@ -60,9 +60,9 @@ public class RequerimientoController {
     }
 
     @PutMapping("/registrar/observacion")
-    public ResponseEntity<?> guardarObservacion(@RequestBody ObservacionDto req) {
+    public ResponseEntity<?> guardarObservacion(@RequestBody ObservacionDto req, HttpServletRequest header) {
         try {
-            Requerimiento requerimiento = requerimientoService.observacion(req);
+            Requerimiento requerimiento = requerimientoService.observacion(req, header);
             if (!isNull(requerimiento)) {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(requerimiento);
             }
@@ -72,9 +72,9 @@ public class RequerimientoController {
         }
     }
     @PutMapping("/registrar/anulacion")
-    public ResponseEntity<?> guardarAnulacion(@RequestBody RequestDto req) {
+    public ResponseEntity<?> guardarAnulacion(@RequestBody RequestDto req, HttpServletRequest header) {
         try {
-            Requerimiento requerimiento = requerimientoService.anulacion(req);
+            Requerimiento requerimiento = requerimientoService.anulacion(req, header);
             if (!isNull(requerimiento)) {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(requerimiento);
             }
@@ -85,9 +85,9 @@ public class RequerimientoController {
     }
 
     @GetMapping("/listar/requerimiento")
-    public ResponseEntity<List<RequrimientoDto>> listaRequerimientos( ){
+    public ResponseEntity<List<RequrimientoDto>> listaRequerimientos( HttpServletRequest header ){
         try {
-            List<RequrimientoDto> lista =requerimientoService.listarReq();
+            List<RequrimientoDto> lista =requerimientoService.listarReq( header);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
             //return productosService.obtenerAllProductos(authorizationHeader);
         }catch (Exception e){
@@ -96,9 +96,9 @@ public class RequerimientoController {
         return ResponseEntity.badRequest().build();
     }
     @GetMapping("/obtener/{id}")
-    public ResponseEntity<RequrimientoDto> listaRequerimientos(@PathVariable("id") int id){
+    public ResponseEntity<RequrimientoDto> listaRequerimientos(@PathVariable("id") int id, HttpServletRequest header){
         try {
-            RequrimientoDto dto = requerimientoService.obtenerxId(id);
+            RequrimientoDto dto = requerimientoService.obtenerxId(id, header);
             if (!isNull(dto)) {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(dto);
             }

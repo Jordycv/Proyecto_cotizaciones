@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +28,17 @@ public class RequerimientoServiceImpl implements RequerimientoService {
 
     @Autowired
     private RequerimientoDAO requerimientoDAO;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
-    public Requerimiento emision(EmisionDto req) {
-
+    public Requerimiento emision(EmisionDto req, HttpServletRequest header) {
+        String token = devuelveToken(header);
         try {
-            Requerimiento requerimiento = new Requerimiento();
-            requerimiento.setFechaemision(LocalDate.now());
-            requerimiento.setUsuemision(req.getUsuemision());
+            if (jwtUtil.validateToken(token)) {
+                Requerimiento requerimiento = new Requerimiento();
+                requerimiento.setFechaemision(LocalDate.now());
+                requerimiento.setUsuemision(req.getUsuemision());
             /*
             requerimiento.setFechaaprobacion(req.getFechaaprobacion());
             requerimiento.setUsuaprobacioon(req.getUsuaprobacioon());
@@ -44,50 +48,66 @@ public class RequerimientoServiceImpl implements RequerimientoService {
             requerimiento.setDescripcionobservacion(req.getDescripcionobservacion());
             requerimiento.setFechaanulado(req.getFechaanulado());
             requerimiento.setUsuanulado(req.getUsuanulado()); */
-            requerimiento.setFechavencimiento(LocalDate.now().plusDays(2));
-            requerimiento.setEstado(1);
+                requerimiento.setFechavencimiento(LocalDate.now().plusDays(2));
+                requerimiento.setEstado(1);
 
 
+                List<RequerimientoDetalle> listreqdetalle = new ArrayList<>();
 
-            List<RequerimientoDetalle> listreqdetalle = new ArrayList<>();
+                // Detalle
+                req.getDetalleReq().forEach(dp -> {
 
-            // Detalle
-            req.getDetalleReq().forEach(dp -> {
+                    RequerimientoDetalle reqdetalle = dp;
 
-                RequerimientoDetalle reqdetalle = dp;
+                    reqdetalle.setProductoid(dp.getProductoid());
+                    reqdetalle.setCantidad(dp.getCantidad());
+                    reqdetalle.setRequerimiento(requerimiento);
+                    listreqdetalle.add(reqdetalle);
 
-                reqdetalle.setProductoid(dp.getProductoid());
-                reqdetalle.setCantidad(dp.getCantidad());
-                reqdetalle.setRequerimiento(requerimiento);
-                listreqdetalle.add(reqdetalle);
-
-            });
-            requerimiento.setDetalleReq(listreqdetalle);
-            requerimientoDAO.saveAndFlush(requerimiento);
+                });
+                requerimiento.setDetalleReq(listreqdetalle);
+                requerimientoDAO.saveAndFlush(requerimiento);
 
 
-            // pedidoCustomRepository.refresh(pedidoEntity);
+                // pedidoCustomRepository.refresh(pedidoEntity);
 
-            return requerimiento;
+                return requerimiento;
 
-        } catch (Exception e) {
+            } else {
+                return null;
+            }
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public Requerimiento aprobacion(RequestDto t) {
+    public Requerimiento aprobacion(RequestDto t, HttpServletRequest header) {
+        String token = devuelveToken(header);
+        try {
+            if (jwtUtil.validateToken(token)) {
         Requerimiento req = requerimientoDAO.findById(t.getIdreq()).get();
         req.setUsuaprobacioon(t.getUsuario());
         req.setFechaaprobacion(LocalDate.now());
         req.setEstado(Estado.APROBADO.getCodigo());
         requerimientoDAO.save(req);
         return req;
+    }else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     @Override
-    public Requerimiento observacion(ObservacionDto t) {
+    public Requerimiento observacion(ObservacionDto t, HttpServletRequest header) {
+        String token = devuelveToken(header);
+        try {
+            if (jwtUtil.validateToken(token)) {
         Requerimiento req = requerimientoDAO.findById(t.getIdreq()).get();
         req.setUsuobservado(t.getUsuobservado());
         req.setFechaobservado(LocalDate.now());
@@ -95,40 +115,91 @@ public class RequerimientoServiceImpl implements RequerimientoService {
         req.setDescripcionobservacion(t.getDescripcionobservacion());
         requerimientoDAO.save(req);
         return req;
+    }else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     @Override
-    public Requerimiento anulacion(RequestDto t) {
+    public Requerimiento anulacion(RequestDto t, HttpServletRequest header) {
+        String token = devuelveToken(header);
+        try {
+            if (jwtUtil.validateToken(token)) {
         Requerimiento req = requerimientoDAO.findById(t.getIdreq()).get();
         req.setUsuanulado(t.getUsuario());
         req.setFechaanulado(LocalDate.now());
         req.setEstado(Estado.ANULADO.getCodigo());
         requerimientoDAO.save(req);
         return req;
+    }else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     @Override
-    public List<RequrimientoDto> listarReq() {
+    public List<RequrimientoDto> listarReq(HttpServletRequest header) {
+        String token = devuelveToken(header);
+        try {
+            if (jwtUtil.validateToken(token)) {
         List<Requerimiento> lista = requerimientoDAO.findAll();
-        List<RequrimientoDto> listaDto =new ArrayList<>();
-       for( Requerimiento dto : lista){
-           RequrimientoDto reqDto = new RequrimientoDto();
-           reqDto.setIdreq(dto.getIdreq());
-           reqDto.setDetalleReq(dto.getDetalleReq());
-           listaDto.add(reqDto);
-       }
-       return listaDto;
+        List<RequrimientoDto> listaDto = new ArrayList<>();
+        for (Requerimiento dto : lista) {
+            RequrimientoDto reqDto = new RequrimientoDto();
+            reqDto.setIdreq(dto.getIdreq());
+            reqDto.setDetalleReq(dto.getDetalleReq());
+            listaDto.add(reqDto);
+        }
+        return listaDto;
+    }else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     @Override
-    public RequrimientoDto obtenerxId(int id) {
+    public RequrimientoDto obtenerxId(int id, HttpServletRequest header) {
+        String token = devuelveToken(header);
+        try {
+            if (jwtUtil.validateToken(token)) {
+                Requerimiento req = requerimientoDAO.findById(id).get();
+                RequrimientoDto reqdto = new RequrimientoDto();
+                reqdto.setIdreq(req.getIdreq());
+                reqdto.setDetalleReq(req.getDetalleReq());
+                return reqdto;
 
-        Requerimiento req =requerimientoDAO.findById(id).get();
-        RequrimientoDto reqdto =new RequrimientoDto();
-        reqdto.setIdreq(req.getIdreq());
-        reqdto.setDetalleReq(req.getDetalleReq());
-        return reqdto;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+
     }
 
 
+    private String devuelveToken(HttpServletRequest header){
+        String authorizationHeader = header.getHeader("Authorization");
+        String token = null;
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            token = authorizationHeader.substring(7);
+        }
+        return token;
+    }
 }
