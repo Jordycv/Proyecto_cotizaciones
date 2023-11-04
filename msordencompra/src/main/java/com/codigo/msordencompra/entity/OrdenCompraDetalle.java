@@ -1,4 +1,4 @@
-package com.codigo.msrespuestacot.entity;
+package com.codigo.msordencompra.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -7,15 +7,14 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "respuestarequerimientodetalle")
-public class RespuestaRequerimientoDetalle {
+@Table(name = "ordencompradetalle")
+public class OrdenCompraDetalle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +23,10 @@ public class RespuestaRequerimientoDetalle {
     private Double cantidad;
     private Double precio;
 
-
     @JsonIgnore // Para evitar bucles
     @ManyToOne
-    @JoinColumn(name = "respuestarequerimientoid", nullable = false )
-    private RespuestaRequerimiento respuestaRequerimiento;
+    @JoinColumn(name = "ordencompraid", nullable = false )
+    private OrdenCompra ordenCompra;
+
 
 }

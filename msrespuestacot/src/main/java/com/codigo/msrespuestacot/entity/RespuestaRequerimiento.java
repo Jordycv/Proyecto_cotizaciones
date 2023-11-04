@@ -7,7 +7,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,11 +22,12 @@ public class RespuestaRequerimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String idrequerimiento;
-    private String proveedorid;
-    private Date fecharespuesta;
+    private int idrequerimiento;
+    private int proveedorid;
+    private LocalDate fecharespuesta;
     private Double total;
-    private String Observaciones;
-
+    private String observaciones;
+    @OneToMany(mappedBy = "respuestaRequerimiento", cascade = CascadeType.ALL)
+    private List<RespuestaRequerimientoDetalle> detalleReq;
 
 }
