@@ -2,6 +2,7 @@ package com.codigo.mslogincot.service.impl;
 
 import com.codigo.mslogincot.constantes.Constantes;
 import com.codigo.mslogincot.dao.UsuarioDAO;
+import com.codigo.mslogincot.entity.Roles;
 import com.codigo.mslogincot.entity.Usuario;
 import com.codigo.mslogincot.security.CustomerDetailService;
 import com.codigo.mslogincot.security.Jwt.JwtUtil;

@@ -30,6 +30,7 @@ public class PersonaController {
     }
 
     @GetMapping("/{personaId}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Persona> getPersonaById(@PathVariable Integer personaId){
         return personaService.getPersona(personaId)
                 .map(persona -> new ResponseEntity<>(persona,HttpStatus.OK))
@@ -37,6 +38,7 @@ public class PersonaController {
     }
 
     @PutMapping("/{personaId}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Persona> updatePersona(@PathVariable Integer personaId, @RequestBody Persona persona) {
         return personaService.updatePersona(personaId, persona)
                 .map(per-> new ResponseEntity<>(per, HttpStatus.OK))
@@ -44,6 +46,7 @@ public class PersonaController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Persona> eliminarPersona(@PathVariable Integer id){
         Persona personarEl = personaService.deletePersona(id).get();
         return ResponseEntity.ok(personarEl);

@@ -38,11 +38,8 @@ public class CustomerDetailService implements UserDetailsService {
             roles1.setRolename(Constantes.ROLE_ADMIN);
             userDetail.getRoles().add(roles1);
             userDetail.getRoles().add(roles);*/
-            Collection<? extends GrantedAuthority> authorities =
-                    userDetail.
-                            getRoles().
-                            stream().
-                            map(roles2 -> new SimpleGrantedAuthority(roles2.getRolename())).collect(Collectors.toList());
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+userDetail.getRol()));
             return new User(userDetail.getUsuario(), userDetail.getPassword(), authorities);
         }
         else {

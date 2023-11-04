@@ -1,6 +1,10 @@
 package com.codigo.msproductos.rest;
 
 import com.codigo.msproductos.constantes.Constantes;
+import com.codigo.msproductos.dto.EmisionDto;
+import com.codigo.msproductos.dto.ObservacionDto;
+import com.codigo.msproductos.dto.RequestDto;
+import com.codigo.msproductos.dto.RequrimientoDto;
 import com.codigo.msproductos.entity.Requerimiento;
 import com.codigo.msproductos.response.ResponseProductos;
 import com.codigo.msproductos.service.ProductosService;
@@ -14,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.isNull;
@@ -28,23 +33,80 @@ public class RequerimientoController {
 
 
 
-    @PostMapping("/registrar")
-    public ResponseEntity<?> save(@RequestBody Requerimiento req) {
+    @PostMapping("/registrar/requerimiento")
+    public ResponseEntity<?> guardarRequerimiento(@RequestBody EmisionDto req) {
         try {
-
-
-            Requerimiento requerimiento = requerimientoService.save(req);
-
+            Requerimiento requerimiento = requerimientoService.emision(req);
             if (!isNull(requerimiento)) {
-                //PedidoDTO resPedido=pedidoService.findById(24L);
-                //System.out.println(resPedido);
                 return ResponseEntity.status(HttpStatus.CREATED).body(requerimiento);
             }
             return ResponseEntity.badRequest().build();
-
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @PutMapping("/registrar/aprobacion")
+    public ResponseEntity<?> guardarAprobacion(@RequestBody RequestDto req) {
+        try {
+            Requerimiento requerimiento = requerimientoService.aprobacion(req);
+            if (!isNull(requerimiento)) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(requerimiento);
+            }
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PutMapping("/registrar/observacion")
+    public ResponseEntity<?> guardarObservacion(@RequestBody ObservacionDto req) {
+        try {
+            Requerimiento requerimiento = requerimientoService.observacion(req);
+            if (!isNull(requerimiento)) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(requerimiento);
+            }
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+    @PutMapping("/registrar/anulacion")
+    public ResponseEntity<?> guardarAnulacion(@RequestBody RequestDto req) {
+        try {
+            Requerimiento requerimiento = requerimientoService.anulacion(req);
+            if (!isNull(requerimiento)) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(requerimiento);
+            }
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/listar/requerimiento")
+    public ResponseEntity<List<RequrimientoDto>> listaRequerimientos( ){
+        try {
+            List<RequrimientoDto> lista =requerimientoService.listarReq();
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(lista);
+            //return productosService.obtenerAllProductos(authorizationHeader);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+    @GetMapping("/obtener/{id}")
+    public ResponseEntity<RequrimientoDto> listaRequerimientos(@PathVariable("id") int id){
+        try {
+            RequrimientoDto dto = requerimientoService.obtenerxId(id);
+            if (!isNull(dto)) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(dto);
+            }
+            return ResponseEntity.badRequest().build();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }

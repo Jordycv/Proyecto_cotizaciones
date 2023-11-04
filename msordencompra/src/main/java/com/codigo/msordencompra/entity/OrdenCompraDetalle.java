@@ -28,5 +28,4 @@ public class OrdenCompraDetalle {
     @JoinColumn(name = "ordencompraid", nullable = false )
     private OrdenCompra ordenCompra;
 
-
 }

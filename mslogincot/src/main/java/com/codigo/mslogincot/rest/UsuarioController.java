@@ -7,6 +7,7 @@ import com.codigo.mslogincot.util.LoginUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/ObtenerAllUsuarios")
+    @PreAuthorize("hasRole('admin')")
     public List<Usuario> allUsuarios(){
         try {
             return usuarioService.obtenerAllUsuarios();
@@ -40,6 +42,7 @@ public class UsuarioController {
         return null;
     }
     @GetMapping("/ObtenerUsuario")
+    @PreAuthorize("hasRole('admin')")
     public Optional<Usuario> ObtenerUnUsuario(@RequestParam(required = true) Integer id){
         try {
             return usuarioService.obtenerUsuario(id);
@@ -60,12 +63,14 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Usuario> updateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
         return usuarioService.updateUsuario(id, usuario)
                 .map(usur-> new ResponseEntity<>(usur, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Usuario> eliminarUsuario(@PathVariable Integer id){
         Usuario usuarioEl = usuarioService.deleteUsuario(id).get();
         return ResponseEntity.ok(usuarioEl);

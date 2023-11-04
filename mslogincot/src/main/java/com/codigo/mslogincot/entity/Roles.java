@@ -35,4 +35,5 @@ public class Roles {
     @JsonIgnore
     private List<Usuario> usuarios = new ArrayList<>();
 
+
 }

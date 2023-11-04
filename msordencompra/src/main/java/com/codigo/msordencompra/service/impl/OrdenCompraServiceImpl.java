@@ -32,6 +32,7 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
             ordenCompra.setFechaemision(LocalDate.now());
             ordenCompra.setEstado(req.getEstado());
             ordenCompra.setObservaciones(req.getObservaciones());
+            ordenCompra.setTotal(req.getTotal());
 
             List<OrdenCompraDetalle> listordendetalle = new ArrayList<>();
 
@@ -49,9 +50,6 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
             });
             ordenCompra.setDetalleOrden(listordendetalle);
             ordenCompraDAO.saveAndFlush(ordenCompra);
-
-
-            // pedidoCustomRepository.refresh(pedidoEntity);
 
             return ordenCompra;
 

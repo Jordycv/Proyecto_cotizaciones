@@ -24,7 +24,8 @@ public class OrdenCompra {
     private LocalDate fechaemision;
     private int estado;
     private String observaciones;
-    @OneToMany(mappedBy = "ordencompra", cascade = CascadeType.ALL)
+    private Double total;
+    @OneToMany(mappedBy = "ordenCompra", cascade = CascadeType.ALL)
     private List<OrdenCompraDetalle> detalleOrden;
 
 

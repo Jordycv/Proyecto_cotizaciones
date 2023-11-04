@@ -27,7 +27,7 @@ public class RespuestaRequerimiento {
     private LocalDate fecharespuesta;
     private Double total;
     private String observaciones;
-    @OneToMany(mappedBy = "respuestaRequerimiento", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "respuestarequerimiento", cascade = CascadeType.ALL)
     private List<RespuestaRequerimientoDetalle> detalleReq;
 
 }

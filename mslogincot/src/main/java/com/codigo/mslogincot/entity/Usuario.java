@@ -41,4 +41,5 @@ public class Usuario {
     )
     private List<Roles> roles = new ArrayList<>();
 
+
 }

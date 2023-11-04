@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.security.access.prepost.PreAuthorize;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Objects.isNull;
 
@@ -20,14 +23,13 @@ public class RespuestaRequerimientoController {
     private RespuestaRequerimientoService respuestaRequerimientoService;
 
 
-
-
     @PostMapping("/registrar")
-    public ResponseEntity<?> save(@RequestBody RespuestaRequerimiento req) {
+    //@PreAuthorize("hasRole('admin')")
+    public ResponseEntity<?> save(@RequestBody RespuestaRequerimiento req, HttpServletRequest header) {
         try {
 
 
-            RespuestaRequerimiento requerimiento = respuestaRequerimientoService.save(req);
+            RespuestaRequerimiento requerimiento = respuestaRequerimientoService.save(req, header);
 
             if (!isNull(requerimiento)) {
                 //PedidoDTO resPedido=pedidoService.findById(24L);
