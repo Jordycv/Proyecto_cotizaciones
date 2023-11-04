@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@Where(clause = "estado = 1")
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "persona")
@@ -24,10 +26,10 @@ public class Persona {
     private String direccion;
     private String email;
     private String telefono;
-    private String areaId;
+    private int areaid;
     private int estado;
-    private Date fechaCrea;
-    private Date fechaMod;
+    private Date fechacrea;
+    private Date fechamod;
 
 
 }

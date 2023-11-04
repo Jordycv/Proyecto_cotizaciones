@@ -40,7 +40,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         try {
 
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("usuario"), requestMap.get("contrasena")));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("usuario"), requestMap.get("password")));
 
             if (authentication.isAuthenticated()) {
                 if (customerDetailsService.getUserDetail().getEstado() == 1) {
@@ -95,11 +95,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (usuarioDAO.existsById(usuario.getId())) {
             Usuario usuarioExistente = obtenerUsuario(id).get();
             usuarioExistente.setUsuario(usuario.getUsuario());
-            usuarioExistente.setEstado(usuario.getEstado());
             usuarioExistente.setPassword(usuario.getPassword());
             usuarioExistente.setRol(usuario.getRol());
-            usuarioExistente.setFechaMod(new Date());
-            usuarioExistente.setPersonaId(usuario.getPersonaId());
+            usuarioExistente.setFechamod(new Date());
+            usuarioExistente.setPersonaid(usuario.getPersonaid());
 
             return Optional.of(usuarioDAO.save(usuarioExistente));
         }
@@ -111,7 +110,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (usuarioDAO.existsById(obtenerUsuario(id).get().getId())) {
             Usuario usuarioExistente = obtenerUsuario(id).get();
             usuarioExistente.setEstado(Constantes.INACTIVO);
-            usuarioExistente.setFechaMod(new Date());
+            usuarioExistente.setFechamod(new Date());
 
             return Optional.of(usuarioDAO.save(usuarioExistente));
         }
@@ -120,7 +119,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         private Boolean validatePrevioRegistro (Map < String, String > requestMap){
             if (requestMap.containsKey("usuario")
                     && requestMap.containsKey("password")
-                    && requestMap.containsKey("persona_id")) {
+                    && requestMap.containsKey("personaid")) {
                 return true;
             }
             return false;
@@ -130,8 +129,9 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuario.setUsuario(requestMap.get("usuario"));
             usuario.setPassword(requestMap.get("password"));
             usuario.setEstado(Constantes.ACTIVO);
-            usuario.setPersonaId(Integer.parseInt(requestMap.get("persona_id")));
-            usuario.setFechaCrea(new Date());
+            usuario.setPersonaid(Integer.parseInt(requestMap.get("personaid")));
+            usuario.setFechacrea(new Date());
+            usuario.setRol(requestMap.get("rol"));
             return usuario;
 
         }

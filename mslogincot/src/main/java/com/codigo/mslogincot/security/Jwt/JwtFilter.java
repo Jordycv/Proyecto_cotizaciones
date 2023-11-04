@@ -20,14 +20,14 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
-    private String username;
-    Claims claims;
+    private String username=null;
+    Claims claims=null;
     @Autowired
     CustomerDetailService customerDetailService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().matches("/api/usuario/login|/api/usuarios/registrarUsuarios|/api/personas/crearPersona")){
+        if(request.getServletPath().matches("/api/usuarios/login|/api/usuarios/registrarUsuarios|/api/personas/crearPersona")){
             filterChain.doFilter(request, response);
         }
         else{
@@ -46,10 +46,11 @@ public class JwtFilter extends OncePerRequestFilter {
                     new WebAuthenticationDetailsSource().buildDetails(request);
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     filterChain.doFilter(request, response);
+                    return;
                 }
             }
         }
-        // Response unauthorized
+
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }

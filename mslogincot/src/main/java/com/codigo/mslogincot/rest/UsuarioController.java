@@ -59,7 +59,7 @@ public class UsuarioController {
         return LoginUtils.getResponseEntity(Constantes.ALGO_SALIO_MAL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PutMapping("/{usuarioId}")
+    @PutMapping("/{id}")
     public ResponseEntity<Usuario> updateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
         return usuarioService.updateUsuario(id, usuario)
                 .map(usur-> new ResponseEntity<>(usur, HttpStatus.OK))

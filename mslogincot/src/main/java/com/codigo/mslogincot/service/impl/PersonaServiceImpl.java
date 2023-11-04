@@ -23,6 +23,7 @@ public class PersonaServiceImpl implements PersonaService {
 
     @Override
     public Persona registrarPersona(Persona persona) {
+        persona.setFechacrea(new Date());
         return personaDAO.save(persona);
     }
 
@@ -44,9 +45,9 @@ public class PersonaServiceImpl implements PersonaService {
             personaExistente.setApellidos(persona.getApellidos());
             personaExistente.setDireccion(persona.getDireccion());
             personaExistente.setEmail(persona.getEmail());
-            personaExistente.setAreaId(persona.getAreaId());
+            personaExistente.setAreaid(persona.getAreaid());
             personaExistente.setEstado(persona.getEstado());
-            personaExistente.setFechaMod(new Date());
+            personaExistente.setFechamod(new Date());
             personaExistente.setTelefono(persona.getTelefono());
 
             return Optional.of(personaDAO.save(personaExistente));
@@ -59,7 +60,7 @@ public class PersonaServiceImpl implements PersonaService {
         if (personaDAO.existsById(getPersona(id).get().getId())) {
             Persona personaExistente = getPersona(id).get();
             personaExistente.setEstado(Constantes.INACTIVO);
-            personaExistente.setFechaMod(new Date());
+            personaExistente.setFechamod(new Date());
 
             return Optional.of(personaDAO.save(personaExistente));
         }

@@ -5,6 +5,7 @@ import com.codigo.mslogincot.service.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class PersonaController {
     private PersonaService personaService;
 
     @GetMapping
+    @PreAuthorize("hasRole('admin')")
     public List<Persona> listarPersonas(){
         return personaService.obtenerAllPersonas();
     }
