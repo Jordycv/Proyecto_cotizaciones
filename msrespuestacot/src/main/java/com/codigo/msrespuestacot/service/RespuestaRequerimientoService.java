@@ -1,7 +1,6 @@
 package com.codigo.msrespuestacot.service;
 
 import com.codigo.msrespuestacot.entity.RespuestaRequerimiento;
-import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 

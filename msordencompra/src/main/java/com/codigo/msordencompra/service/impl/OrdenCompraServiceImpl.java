@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,10 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
     private JwtUtil jwtUtil;
 
     @Override
-    public OrdenCompra save(OrdenCompra req) {
-
+    public OrdenCompra save(OrdenCompra req, HttpServletRequest header) {
+        String token = devuelveToken(header);
         try {
+            if(jwtUtil.validateToken(token)) {
             OrdenCompra ordenCompra = new OrdenCompra();
             ordenCompra.setIdrespuestarequerimiento(req.getIdrespuestarequerimiento());
             ordenCompra.setFechaemision(LocalDate.now());
@@ -52,11 +54,24 @@ public class OrdenCompraServiceImpl implements OrdenCompraService {
             ordenCompraDAO.saveAndFlush(ordenCompra);
 
             return ordenCompra;
-
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    private String devuelveToken(HttpServletRequest header){
+        String authorizationHeader = header.getHeader("Authorization");
+        String token = null;
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+            token = authorizationHeader.substring(7);
+        }
+        return token;
+    }
+
 
 }
