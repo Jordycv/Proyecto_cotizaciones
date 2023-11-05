@@ -5,10 +5,6 @@ CREATE TABLE Proveedor(Id serial primary key,
 					   Telefono varchar(50),
 					   Observacion varchar(150),
 					   Estado INTEGER,
-					   UsuCrea int,
-					   FechaCrea date,
-					   UsuMod int,
-					   FechaMod date);
 
 
 create table Producto(Id serial primary key,
@@ -19,7 +15,7 @@ create table Producto(Id serial primary key,
 					 
 create table Area(Id serial primary key,
 				 descripcion varchar(150));
- insert into Area(descripcion) values('COMPRAS'),('LOGISTICA'),('CONTABILIDAD'),('GERENCIA');
+ insert into Area(descripcion) values('COMPRAS'),('LOGISTICA'),('PROVEEDOR');
 				 
 CREATE TABLE Persona (
     Id serial PRIMARY KEY,
