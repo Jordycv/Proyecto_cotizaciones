@@ -10,16 +10,16 @@ CREATE TABLE Proveedor(Id serial primary key,
 					   UsuMod int,
 					   FechaMod date);
 
-create table UnidadMedida(Id serial primary key,
-						 Descripcion varchar(50),
-						 Abreviatura varchar(10));
 
 create table Producto(Id serial primary key,
-					 Descripcion varchar(150),
-					 IdUnidadMedida int references UnidadMedida(Id));
+					 nombre varchar(150),
+					 precio decimal(15,2),
+					 cantidad int
+					 estado int);
 					 
 create table Area(Id serial primary key,
 				 descripcion varchar(150));
+ insert into Area(descripcion) values('COMPRAS'),('LOGISTICA'),('CONTABILIDAD'),('GERENCIA');
 				 
 CREATE TABLE Persona (
     Id serial PRIMARY KEY,
@@ -41,69 +41,57 @@ CREATE TABLE Usuario (
     Estado INTEGER, 
     FechaCrea DATE,
     FechaMod DATE,
-    PersonsaId INT REFERENCES Personsa(Id)
+    PersonaId INT REFERENCES Personsa(Id)
 );
 
 create table Estado(Id serial primary key,
 				   Descripcion varchar(10));
-insert into Estado(Descripcion) values('EMITIDO'),('APROBADO'),('OBSERVADO'),('ANULADO'),('ATENDIDO');
+insert into Estado(Descripcion) values('EMITIDO'),('APROBADO'),(''),('OBSERVADO'),(''),(''),('ANULADO');
 
-create table Requerimiento(Id serial primary key,
+create table Requerimiento(idreq serial primary key,
 						  FechaEmision date, 
-						  UsuEmision int references Usuario(Id),
+						  UsuEmision int ,
 						  FechaAprobacion date,
-						  UsuAprobacioon int references Usuario(Id),
+						  UsuAprobacioon int ,
 						  FechaObservado date,
-						  UsuObservado int references Usuario(Id),
+						  UsuObservado int ,
 						  DescripcionObservacion varchar(200),
 						  FechaAnulado date,
 						  FechaVencimiento date,
-						  UsuAnulado int references Usuario(Id),
-						  Estado int references Estado(Id));
+						  UsuAnulado int,
+						  Estado int);
 						  
-create table RequerimientoDetalle(Id serial primary key,
-								 RequerimientoId int references Requerimiento(Id),
-								 ProductoId int references Producto(Id),
-								 Cantidad integer);
-								 --drop table Requerimiento
+create table RequerimientoDetalle(iddet serial primary key,
+								 idreq int ,
+								 productoid int ,
+								 Cantidad int);
+								
 create table RespuestaRequerimiento(Id serial primary key,
-								   IdRequerimiento int references Requerimiento(Id),
-								   ProveedorId int references Proveedor(Id),
+								   IdRequerimiento int ,
+								   ProveedorId int ,
 								   FechaRespuesta date,
 								   Total decimal(15,2),
 								   Observaciones varchar(150));
 								   
 create table RespuestaRequerimientoDetalle(Id serial primary key,
-										  RespuestaRequerimientoId int references RespuestaRequerimiento(Id),
-										  ProductoId int references Producto(Id),
+										  RespuestaRequerimientoId int ,
+										  ProductoId int ,
 								 		  Cantidad integer,
 										  Precio decimal(15,2));
 				
 create table OrdenCompra(Id serial primary key,
-								   IdRespuestaRequerimiento int references RespuestaRequerimiento(Id),
+								   IdRespuestaRequerimiento int ,
 								   FechaEmision date,
 						 			Estado int,
-								   Observaciones varchar(150));
+								   Observaciones varchar(150),
+								   Total decimal(15,2));
 								   
 create table OrdenCompraDetalle(Id serial primary key,
-										  OrdenCompraId int references OrdenCompra(Id),
-										  ProductoId int references Producto(Id),
+										  OrdenCompraId int ,
+										  ProductoId int ,
 								 		  Cantidad integer,
 										  Precio decimal(15,2));
 										  
-create table Pecosa(Id serial primary key,
-								   IdArea int references Area(Id),
-									FechaEmision date,
-								   PersonaId int references Persona(Id),
-								Estado int,
-								   Observaciones varchar(150));
-								   
-create table PecosaDetalle(Id serial primary key,
-										  PecosaId int references Pecosa(Id),
-										  ProductoId int references Producto(Id),
-								 		  Cantidad integer,
-										  Precio decimal(15,2));
-										  
-create table Stock(productoId int,
-				  Descripcion varchar(200),
-				  Stock integer)
+create table roles(Id serial primary key,
+				   rolename varchar(20),
+				 estado integer);
