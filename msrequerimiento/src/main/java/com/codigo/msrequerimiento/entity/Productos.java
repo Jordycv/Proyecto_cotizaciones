@@ -1,4 +1,4 @@
-package com.codigo.msrespuestacot.entity;
+package com.codigo.msrequerimiento.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,11 +12,12 @@ import javax.persistence.*;
 @Setter
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "producto")
+@Table(name = "productos")
 public class Productos {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int productoId;
     private String nombre;
     private double precio;
     private double cantidad;

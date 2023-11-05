@@ -1,17 +1,17 @@
-package com.codigo.msproductos.service.impl;
+package com.codigo.msrequerimiento.service.impl;
 
 
 
-import com.codigo.msproductos.constantes.Estado;
-import com.codigo.msproductos.dao.RequerimientoDAO;
-import com.codigo.msproductos.dto.EmisionDto;
-import com.codigo.msproductos.dto.ObservacionDto;
-import com.codigo.msproductos.dto.RequestDto;
-import com.codigo.msproductos.dto.RequrimientoDto;
-import com.codigo.msproductos.entity.Requerimiento;
-import com.codigo.msproductos.entity.RequerimientoDetalle;
-import com.codigo.msproductos.security.jwt.JwtUtil;
-import com.codigo.msproductos.service.RequerimientoService;
+import com.codigo.msrequerimiento.constantes.Estado;
+import com.codigo.msrequerimiento.dao.RequerimientoDAO;
+import com.codigo.msrequerimiento.dto.EmisionDto;
+import com.codigo.msrequerimiento.dto.ObservacionDto;
+import com.codigo.msrequerimiento.dto.RequestDto;
+import com.codigo.msrequerimiento.dto.RequrimientoDto;
+import com.codigo.msrequerimiento.entity.Requerimiento;
+import com.codigo.msrequerimiento.entity.RequerimientoDetalle;
+import com.codigo.msrequerimiento.security.jwt.JwtUtil;
+import com.codigo.msrequerimiento.service.RequerimientoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

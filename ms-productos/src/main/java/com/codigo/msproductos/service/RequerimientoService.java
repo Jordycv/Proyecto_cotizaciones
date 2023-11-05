@@ -14,12 +14,12 @@ import java.util.Map;
 
 public interface RequerimientoService {
 
-    Requerimiento emision(EmisionDto t, HttpServletRequest header);
-    Requerimiento aprobacion(RequestDto t, HttpServletRequest header);
-    Requerimiento observacion(ObservacionDto t, HttpServletRequest header);
-    Requerimiento anulacion(RequestDto t, HttpServletRequest header);
+    Requerimiento emision(EmisionDto t);
+    Requerimiento aprobacion(RequestDto t);
+    Requerimiento observacion(ObservacionDto t);
+    Requerimiento anulacion(RequestDto t);
 
-    List<RequrimientoDto> listarReq(HttpServletRequest header);
+    List<RequrimientoDto> listarReq();
 
-    RequrimientoDto obtenerxId(int id, HttpServletRequest header);
+    RequrimientoDto obtenerxId(int id);
 }

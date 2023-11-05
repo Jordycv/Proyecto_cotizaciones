@@ -1,16 +1,12 @@
 package com.codigo.msrespuestacot.service.impl;
 
-import com.codigo.msrespuestacot.constantes.Constantes;
 import com.codigo.msrespuestacot.dao.RespuestaRequerimientoDAO;
 import com.codigo.msrespuestacot.entity.RespuestaRequerimiento;
 import com.codigo.msrespuestacot.entity.RespuestaRequerimientoDetalle;
 import com.codigo.msrespuestacot.security.JwtUtil;
 import com.codigo.msrespuestacot.service.RespuestaRequerimientoService;
-import com.codigo.msrespuestacot.util.RespuestaRequerimientoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class RespuestaRequerimientoSerrviceImpl implements RespuestaRequerimientoService {
+public class RespuestaRequerimientoServiceImpl implements RespuestaRequerimientoService {
 
 
     @Autowired
@@ -28,6 +24,7 @@ public class RespuestaRequerimientoSerrviceImpl implements RespuestaRequerimient
 
     @Autowired
     private JwtUtil jwtUtil;
+
 
     @Override
     public RespuestaRequerimiento save(RespuestaRequerimiento req, HttpServletRequest header) {
@@ -69,6 +66,23 @@ public class RespuestaRequerimientoSerrviceImpl implements RespuestaRequerimient
         return null;
 
     }
+
+    @Override
+    public RespuestaRequerimiento obtenerxId(Long id, HttpServletRequest header) {
+        String token = devuelveToken(header);
+        try {
+            if (jwtUtil.validateToken(token)) {
+                RespuestaRequerimiento req = respuestaRequerimientoDAO.findById(id).get();
+                return req;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private String devuelveToken(HttpServletRequest header){
         String authorizationHeader = header.getHeader("Authorization");
         String token = null;

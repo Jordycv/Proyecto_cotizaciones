@@ -1,14 +1,13 @@
 package com.codigo.msordencompra.rest;
 
 import com.codigo.msordencompra.entity.OrdenCompra;
+import com.codigo.msordencompra.model.RespuestaRequerimiento;
 import com.codigo.msordencompra.service.OrdenCompraService;
+import com.codigo.msordencompra.service.impl.RespuestaRequerimientoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +18,13 @@ import static java.util.Objects.isNull;
 public class OrdenCompraController {
     @Autowired
     private OrdenCompraService ordenCompraService;
+    @Autowired
+    private RespuestaRequerimientoService respuestaRequerimientoService;
+
+    @GetMapping("/obtenerRequerimientoXId/{id}")
+    public RespuestaRequerimiento listarrequerimientoXid(@PathVariable("id") int id, HttpServletRequest authorizationHeader) {
+        return respuestaRequerimientoService.listarrequerimientoXid(id, authorizationHeader);
+    }
 
     @PostMapping("/registrar")
     public ResponseEntity<?> save(@RequestBody OrdenCompra req, HttpServletRequest header) {
