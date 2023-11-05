@@ -4,13 +4,13 @@ CREATE TABLE Proveedor(Id serial primary key,
 					   Direccion varchar(200), 
 					   Telefono varchar(50),
 					   Observacion varchar(150),
-					   Estado INTEGER,
+					   Estado INTEGER);
 
 
 create table Productos(producto_id serial primary key,
 					 nombre varchar(150),
 					 precio decimal(15,2),
-					 cantidad int
+					 cantidad int,
 					 estado int);
 					 
 create table Area(Id serial primary key,
@@ -33,11 +33,12 @@ CREATE TABLE Persona (
 CREATE TABLE Usuario (
     Id serial PRIMARY KEY,
     Usuario VARCHAR(255) NOT NULL,
-    Password TEXT,
+    Password VARCHAR(25),
     Estado INTEGER, 
     FechaCrea DATE,
     FechaMod DATE,
-    PersonaId INT REFERENCES Personsa(Id)
+    PersonaId INT REFERENCES Personsa(Id),
+	rol VARCHAR(20)
 );
 
 create table Estado(Id serial primary key,
