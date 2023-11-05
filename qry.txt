@@ -7,7 +7,7 @@ CREATE TABLE Proveedor(Id serial primary key,
 					   Estado INTEGER,
 
 
-create table Producto(Id serial primary key,
+create table Productos(producto_id serial primary key,
 					 nombre varchar(150),
 					 precio decimal(15,2),
 					 cantidad int
